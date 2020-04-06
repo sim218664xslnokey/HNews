@@ -1,9 +1,11 @@
 /*
-*   Author: Retr0
-*   Version: 0.0.1
+    Name:     HNews
+*   Author:   Retr0
+*   Version:  0.0.1
 */
 
 package com.example.hnews;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,24 +16,30 @@ import android.view.Window;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-
 public class MainActivity extends Activity {
     protected WebView mWebView;
     protected ProgressDialog progressBar;
 
-    @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
+    @SuppressLint({"SetJavaScriptEnabled"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /* Turn off Title of window */
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
+        /* Main Web View */
         mWebView = findViewById(R.id.webkit);
         mWebView.getSettings().setJavaScriptEnabled(true);
+
+        /* Progress icon for loading main page */
         progressBar = ProgressDialog.show(MainActivity.this, "Progress...", "Loading");
         progressBar.setProgress(ProgressDialog.STYLE_SPINNER);
         progressBar.setIndeterminate(true);
         progressBar.setCanceledOnTouchOutside(false);
 
+        /* Desktop mode for browsing web site */
         setDesktopMode(mWebView, true);
 
         mWebView.setWebViewClient(new WebViewClient() {
@@ -45,13 +53,15 @@ public class MainActivity extends Activity {
                 try {
                     mWebView.stopLoading();
                 } catch (Exception ignored) {
-                    // Error
+                    /* Error */
                 }
 
+                /* Go back from page */
                 if(mWebView.canGoBack()) {
                     mWebView.goBack();
                 }
 
+                /* Checking for internet connection */
                 mWebView.loadUrl("about:blank");
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                 alertDialog.setTitle("Error");
@@ -66,10 +76,11 @@ public class MainActivity extends Activity {
                 super.onReceivedError(mWebView, errorCode, description, failingUrl);
             }
         });
+        /* call url */
         callUrl();
     }
 
-    // Desktop Mode for View
+    /* Desktop Mode for View */
     public void setDesktopMode(WebView webView, boolean enabled) {
         String newUserAgent = webView.getSettings().getUserAgentString();
         if(enabled) {
@@ -89,7 +100,7 @@ public class MainActivity extends Activity {
         webView.reload();
     }
 
-    // Go back to default page
+    /* Go back to default page */
     @Override
     public void onBackPressed() {
         if(mWebView.canGoBack()) {
@@ -99,7 +110,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    // Call again link
+    /* Call again link */
     protected void callUrl() {
         mWebView.loadUrl("https://news.ycombinator.com");
     }
